@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import pandas as pd
 
@@ -28,19 +30,20 @@ def main():
 
     simples = simple_df.values
     targets = target_series.values
+    class_number = len(target_series.unique())
 
     standard_scaler = StandardScaler()
     simples_std = standard_scaler.fit_transform(simples)
 
-    # use 70% simples to training model
+    # use 90% simples to training model
 
-    train_number = int(simples_std.shape[0] * 0.8)
+    train_number = int(simples_std.shape[0] * 0.9)
     simples_train = simples_std[:train_number]
     targets_train = targets[:train_number]
     simples_test = simples_std[train_number:]
     targets_test = targets[train_number:]
 
-    knn = neighbors.KNeighborsClassifier()
+    knn = neighbors.KNeighborsClassifier(n_neighbors=int(math.sqrt(class_number)), weights='distance')
     knn.fit(simples_train, targets_train)
 
     # log model accuracy
